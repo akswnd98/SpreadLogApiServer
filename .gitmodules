@@ -1,0 +1,6 @@
+[submodule "src/db"]
+	path = src/db
+	url = https://github.com/akswnd98/SpreadLogDB
+[submodule "src/common"]
+	path = src/common
+	url = https://github.com/akswnd98/SpreadLogCommon
