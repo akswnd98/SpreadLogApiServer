@@ -10,6 +10,11 @@ declare namespace NodeJS {
     DB_USER: string;
     DB_PW: string;
 
+    SESSION_SECRET: string;
+
+    EMAIL_ADDR: string;
+    EMAIL_PW: string;
+
     IMAGE_PATH: string;
   }
 }
