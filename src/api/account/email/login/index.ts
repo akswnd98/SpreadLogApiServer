@@ -12,7 +12,6 @@ const router = express.Router();
 
 router.post('/', async (req: Request<any, LoginResponse, LoginRequest>, res: Response<LoginResponse>) => {
   try {
-    console.log(req.body);
     const findRst = await Account.findOne({
       where: {
         email: req.body.email,
