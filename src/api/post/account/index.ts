@@ -5,6 +5,7 @@ import {
   AddEdgeResponse,
   DeleteEdgeRequest,
   DeleteNodeRequest,
+  PublishPostRequest,
 } from '@/src/common/api/account/post/account';
 import Post from '@/src/db/Post';
 import Edge from '@/src/db/Post/Edge';
@@ -54,7 +55,7 @@ router.post('/addEdge', async (req: Request<any, AddEdgeResponse, AddEdgeRequest
 
 router.post('/deleteEdge', async (req: Request<any, any, DeleteEdgeRequest>, res) => {
   try {
-    await Edge.destroy({ where: { id: req.body.id } });
+    await Edge.destroy({ where: { [Op.and]: { id: req.body.id, accountId: req.session.account!.id } } });
     res.end();
   } catch (e) {
     console.log(e);
@@ -64,13 +65,39 @@ router.post('/deleteEdge', async (req: Request<any, any, DeleteEdgeRequest>, res
 
 router.post('/deleteNode', async (req: Request<any, any, DeleteNodeRequest>, res) => {
   try {
-    await Edge.destroy({ where: { [Op.or]: { fromId: req.body.id, toId: req.body.id } } });
-    await Post.destroy({ where: { id: req.body.id } });
+    await Edge.destroy({
+      where: {
+        [Op.and]: {
+          accountId: req.session.account!.id,
+          [Op.or]: { fromId: req.body.id, toId: req.body.id },
+        },
+      },
+    });
+    await Post.destroy({ where: { id: req.body.id, accountId: req.session.account!.id } });
     res.end();
   } catch (e) {
     console.log(e);
     res.status(404);
   }
+});
+
+router.post('/publish', async (req: Request<any, any, PublishPostRequest>, res) => {
+  try {
+    console.log(req.body);
+    await Post.update({
+      title: req.body.title,
+      body: req.body.body,
+    }, {
+      where: {
+        id: req.body.id,
+        accountId: req.session.account!.id,
+      },
+    });
+  } catch (e) {
+    console.log(e);
+    res.status(404);
+  }
+  res.end();
 });
 
 export default router;

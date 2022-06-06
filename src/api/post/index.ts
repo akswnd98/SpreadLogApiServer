@@ -3,6 +3,8 @@ import {
   GetAllPostNodesResponse,
   GetAllPostEdgesRequest,
   GetAllPostEdgesResponse,
+  GetPostResponse,
+  GetPostRequest,
 } from '@/src/common/api/account/post';
 import EmailAccount from '@/src/db/EmailAccount';
 import Post from '@/src/db/Post';
@@ -57,6 +59,24 @@ router.get('/getAllPostEdges', async (req: Request<any, GetAllPostEdgesResponse,
   } catch (e) {
     console.log(e);
     res.status(404);
+  }
+  res.end();
+});
+
+router.get('/', async (req: Request<any, GetPostResponse, any, GetPostRequest>, res: Response<GetPostResponse>) => {
+  try {
+    const post = await Post.findOne({ where: { id: req.query.id } });
+    if (post === null) throw Error('no post');
+    res.send({
+        id: post.id!,
+        accountId: post.accountId!,
+        title: post.title!,
+        body: post.body!,
+        firstUpload: post.firstUpload!.toString(),
+        lastUpdate: post.lastUpdate!.toString(),
+    });
+  } catch (e) {
+    console.log('GET /api/post failed', e);
   }
   res.end();
 });
