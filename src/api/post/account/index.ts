@@ -83,7 +83,6 @@ router.post('/deleteNode', async (req: Request<any, any, DeleteNodeRequest>, res
 
 router.post('/publish', async (req: Request<any, any, PublishPostRequest>, res) => {
   try {
-    console.log(req.body);
     await Post.update({
       title: req.body.title,
       body: req.body.body,
