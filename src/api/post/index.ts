@@ -12,10 +12,13 @@ import EmailAccount from '@/src/db/EmailAccount';
 import { Post, PostEdge } from '@/src/db/relations';
 import express, { Request, Response } from 'express';
 import account from './account';
+import comment from './comment';
 
 const router = express.Router();
 
 router.use('/account', account);
+
+router.use('/comment', comment);
 
 router.get('/getAllPostNodes', async (req: Request<any, GetAllPostNodesResponse, any, GetAllPostNodesRequest>, res: Response<GetAllPostNodesResponse>) => {
   try {
@@ -69,12 +72,12 @@ router.get('/', async (req: Request<any, GetPostResponse, any, GetPostRequest>, 
     const post = await Post.findOne({ where: { id: req.query.id } });
     if (post === null) throw Error('no post');
     res.send({
-        id: post.id!,
-        accountId: post.accountId!,
-        title: post.title!,
-        body: post.body!,
-        firstUpload: post.firstUpload!.toString(),
-        lastUpdate: post.lastUpdate!.toString(),
+      id: post.id!,
+      accountId: post.accountId!,
+      title: post.title!,
+      body: post.body!,
+      firstUpload: post.firstUpload!.toString(),
+      lastUpdate: post.lastUpdate!.toString(),
     });
   } catch (e) {
     console.log('GET /api/post failed', e);
